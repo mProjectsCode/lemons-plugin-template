@@ -5,27 +5,28 @@
 This uses [bun](https://bun.sh/), not node. So you need that installed. If you are on windows use WSL, if that does not work... good luck.
 
 Things to change Checklist:
-- [ ] `manifest.json`
-- [ ] `package.json`
-- [ ] `versions.json`
-- [ ] `automation/config.js`
-- [ ] rename `exampleVault/.obsidian/lemons-plugin-template`
+
+-   [ ] `manifest.json`
+-   [ ] `package.json`
+-   [ ] `versions.json`
+-   [ ] `automation/config.js`
+-   [ ] rename `exampleVault/.obsidian/lemons-plugin-template`
 
 If and **only if** you completed these steps, you can run `bun install` and `bun run dev` to start your plugin jorney.
 
 ## Scripts Explained
 
-- `dev` - build into the example vault with hot reload
-- `build` - build for release
-- `test` - run your tests
-- `format` - format your code
-- `lint` - lint your code
-- `lint:fix` - lint your code and fix auto fixable mistakes
-- `release` - run the script to release a new version
+-   `dev` - build into the example vault with hot reload
+-   `build` - build for release
+-   `test` - run your tests
+-   `format` - format your code
+-   `lint` - lint your code
+-   `lint:fix` - lint your code and fix auto fixable mistakes
+-   `release` - run the script to release a new version
 
 ## References
 
-Sample plugin repo: https://github.com/obsidianmd/obsidian-sample-plugin
-Obsidian help: https://help.obsidian.md/Home
-Obsidian docs: https://docs.obsidian.md/Home
-Obsidian API: https://github.com/obsidianmd/obsidian-api/blob/master/obsidian.d.ts
+-   Sample plugin repo: https://github.com/obsidianmd/obsidian-sample-plugin
+-   Obsidian help: https://help.obsidian.md/Home
+-   Obsidian docs: https://docs.obsidian.md/Home
+-   Obsidian API: https://github.com/obsidianmd/obsidian-api/blob/master/obsidian.d.ts
