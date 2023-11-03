@@ -1,4 +1,5 @@
 {
 	"devBranch": "main",
-	"releaseBranch": "release"
+	"releaseBranch": "release",
+	"github": "https://github.com/mProjectsCode/lemons-plugin-template"
 }
