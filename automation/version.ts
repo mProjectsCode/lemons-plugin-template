@@ -38,7 +38,7 @@ async function runPreconditions(): Promise<void> {
 	// if there were any changes, commit them
 	if (changesToCommit) {
 		await $seq(
-			[`git commit -m"[auto] run release preconditions"`],
+			[`git commit -m "[auto] run release preconditions"`],
 			() => {
 				throw new UserError('failed to add preconditions changes to git');
 			},
@@ -108,7 +108,7 @@ async function run() {
 	await Bun.write(packageFile, JSON.stringify(packageJson, null, '\t'));
 
 	await $seq(
-		[`bun run format`, `git add .`, `git commit -m"[auto] bump version to \`${newVersionString}\`"`],
+		[`bun run format`, `git add .`, `git commit -m "[auto] bump version to \`${newVersionString}\`"`],
 		() => {
 			throw new UserError('failed to add preconditions changes to git');
 		},
@@ -121,9 +121,9 @@ async function run() {
 	await $seq(
 		[
 			`git checkout ${config.releaseBranch}`,
-			`git merge ${config.devBranch} --commit -m"[auto] merge \`${newVersionString}\` release commit"`,
+			`git merge ${config.devBranch} --commit -m "[auto] merge \`${newVersionString}\` release commit"`,
 			`git push origin ${config.releaseBranch}`,
-			`git tag -a ${newVersionString} -m"release version ${newVersionString}"`,
+			`git tag -a ${newVersionString} -m "release version ${newVersionString}"`,
 			`git push origin ${newVersionString}`,
 			`git checkout ${config.devBranch}`,
 			`git merge ${config.releaseBranch}`,
