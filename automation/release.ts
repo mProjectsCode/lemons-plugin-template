@@ -1,6 +1,6 @@
-import { $, $seq, Verboseness, $input, $choise, $confirm, CMD_FMT } from './shellUtils';
+import { $seq, Verboseness, $input, $choise, $confirm, CMD_FMT } from './shellUtils';
 import config from './config.json';
-import { Version, getIncrementOptions, parseVersion, stringifyVersion, versionParser } from 'versionUtils';
+import { Version, getIncrementOptions, parseVersion, stringifyVersion } from 'versionUtils';
 import { UserError } from 'utils';
 
 async function runPreconditions(): Promise<void> {

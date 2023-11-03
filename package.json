@@ -6,12 +6,11 @@
 	"scripts": {
 		"dev": "bun esbuild.dev.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && bun esbuild.config.mjs production",
-		"version": "node version-bump.mjs && git add manifest.json versions.json",
 		"test": "bun test",
 		"format": "prettier --write .",
 		"lint": "eslint --max-warnings=0 src/**",
 		"lint:fix": "eslint --max-warnings=0 --fix src/**",
-		"commit": "bun run automation/commit.ts"
+		"release": "bun run automation/release.ts"
 	},
 	"keywords": [],
 	"author": "Moritz Jung",
