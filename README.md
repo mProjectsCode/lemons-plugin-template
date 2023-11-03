@@ -10,6 +10,7 @@ Things to change Checklist:
 -   [ ] `package.json`
 -   [ ] `versions.json`
 -   [ ] `automation/config.js`
+-   [ ] `.github/workflows/release.yml`
 -   [ ] rename `exampleVault/.obsidian/lemons-plugin-template`
 
 If and **only if** you completed these steps, you can run `bun install` and `bun run dev` to start your plugin jorney.
