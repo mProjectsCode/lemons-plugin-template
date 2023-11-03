@@ -6,14 +6,14 @@ import { UserError } from 'utils';
 async function run() {
 	console.log('looking for untracked changes ...');
 
-	// await $seq(
-	// 	[`git add .`, `git diff --quiet`, `git diff --cached --quiet`, `git checkout ${config.devBranch}`],
-	// 	() => {
-	// 		throw new UserError('there are still untracked changes');
-	// 	},
-	// 	() => {},
-	// 	Verboseness.QUITET,
-	// );
+	await $seq(
+		[`git add .`, `git diff --quiet`, `git diff --cached --quiet`, `git checkout ${config.devBranch}`],
+		() => {
+			throw new UserError('there are still untracked changes');
+		},
+		() => {},
+		Verboseness.QUITET,
+	);
 
 	console.log('');
 
@@ -104,10 +104,12 @@ async function run() {
 		[
 			`git checkout ${config.releaseBranch}`,
 			`git merge ${config.devBranch} --commit -m"[auto] merge \`${newVersionString}\` release commit"`,
+			`git push origin ${config.releaseBranch}`,
 			`git tag -a ${newVersionString} -m"release version ${newVersionString}"`,
 			`git push origin ${newVersionString}`,
 			`git checkout ${config.devBranch}`,
 			`git merge ${config.releaseBranch}`,
+			`git push origin ${config.devBranch}`,
 		],
 		() => {
 			throw new UserError('failed to merge or create tag');
