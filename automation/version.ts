@@ -25,11 +25,11 @@ async function runPreconditions(): Promise<void> {
 	);
 
 	// check if there were any changes
-	let changesToCommit = true;
+	let changesToCommit = false;
 	await $seq(
 		[`git diff --quiet`, `git diff --cached --quiet`],
 		() => {
-			changesToCommit = false;
+			changesToCommit = true;
 		},
 		() => {},
 		Verboseness.QUITET,
