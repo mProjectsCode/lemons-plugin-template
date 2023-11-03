@@ -6,31 +6,31 @@ import { UserError } from 'utils';
 async function run() {
 	console.log('looking for untracked changes ...');
 
+	// await $seq(
+	// 	[`git add .`, `git diff --quiet`, `git diff --cached --quiet`],
+	// 	() => {
+	// 		throw new UserError('there are still untracked changes');
+	// 	},
+	// 	() => {},
+	// 	Verboseness.QUITET,
+	// );
+
+	console.log('');
+
+	console.log('running preconditions ...');
+
+	console.log('');
+
 	await $seq(
-		[`git add .`, `git diff --quiet`, `git diff --cached --quiet`],
-		() => {
-			throw new UserError('there are still untracked changes');
-		},
-		() => {},
-		Verboseness.QUITET,
-	);
-
-    console.log('');
-
-    console.log('running preconditions ...');
-
-    console.log('');
-
-    await $seq(
-		[`bun run format`, `bun run lint`, `bun run test`],
+		[`bun run format`, `bun run lint:fix`, `bun run test`],
 		(cmd: string) => {
 			throw new UserError(`precondition "${cmd}" failed`);
 		},
 		() => {},
-		Verboseness.QUITET,
+		Verboseness.VERBOSE,
 	);
 
-    await $seq(
+	await $seq(
 		[`git add .`, `git commit -m"[auto] run release preconditions"`],
 		() => {
 			throw new UserError('failed to add preconditions changes to git');
@@ -39,18 +39,18 @@ async function run() {
 		Verboseness.NORMAL,
 	);
 
-    console.log('');
+	console.log('');
 
 	console.log('bumping versions ...');
 
-    console.log('');
+	console.log('');
 
 	const manifestFile = Bun.file('./manifest.json');
 	const manifest = await manifestFile.json();
 
 	const versionString: string = manifest.version;
 	const currentVersion: Version = parseVersion(versionString);
-    const currentVersionString = stringifyVersion(currentVersion)
+	const currentVersionString = stringifyVersion(currentVersion);
 
 	const versionIncrementOptions = getIncrementOptions(currentVersion);
 
@@ -59,32 +59,26 @@ async function run() {
 		versionIncrementOptions.map(x => stringifyVersion(x)),
 	);
 	const newVersion = versionIncrementOptions[selctedIndex];
-    const newVersionString = stringifyVersion(newVersion)
+	const newVersionString = stringifyVersion(newVersion);
 
-    console.log('');
+	console.log('');
 
 	await $confirm(`Version will be updated "${currentVersionString}" -> "${newVersionString}". Are you sure`, () => {
 		throw new UserError('user canceled script');
 	});
 
-    manifest.version = newVersionString;
+	manifest.version = newVersionString;
 
-    await Bun.write(
-        manifestFile,
-        JSON.stringify(manifest, null, 4),
-    );
+	await Bun.write(manifestFile, JSON.stringify(manifest, null, 4));
 
-    const packageFile = Bun.file('./package.json');
-    const packageJson = await packageFile.json();
+	const packageFile = Bun.file('./package.json');
+	const packageJson = await packageFile.json();
 
-    packageJson.version = newVersionString;
+	packageJson.version = newVersionString;
 
-    await Bun.write(
-        packageFile,
-        JSON.stringify(packageJson, null, 4),
-    );
+	await Bun.write(packageFile, JSON.stringify(packageJson, null, 4));
 
-    await $seq(
+	await $seq(
 		[`git add .`, `git commit -m"[auto] bump version to \`${newVersionString}\`"`],
 		() => {
 			throw new UserError('failed to add preconditions changes to git');

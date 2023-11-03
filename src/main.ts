@@ -1,24 +1,24 @@
-import { Editor, MarkdownFileInfo, MarkdownView, Modal, Notice, Plugin } from 'obsidian';
-import { MyPluginSettings, DEFAULT_SETTINGS } from './settings/Settings';
+import { Plugin } from 'obsidian';
+import { type MyPluginSettings, DEFAULT_SETTINGS } from './settings/Settings';
 import { SampleSettingTab } from './settings/SettingTab';
 
 export default class MyPlugin extends Plugin {
 	// @ts-ignore defined in on load;
 	settings: MyPluginSettings;
 
-	async onload() {
+	async onload(): Promise<void> {
 		await this.loadSettings();
 
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 	}
 
-	onunload() {}
+	onunload(): void {}
 
-	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+	async loadSettings(): Promise<void> {
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData()) as MyPluginSettings;
 	}
 
-	async saveSettings() {
+	async saveSettings(): Promise<void> {
 		await this.saveData(this.settings);
 	}
 }
