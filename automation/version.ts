@@ -3,24 +3,8 @@ import config from './config.json';
 import { Version, getIncrementOptions, parseVersion, stringifyVersion, versionParser } from 'versionUtils';
 import { UserError } from 'utils';
 
-async function run() {
-	console.log('looking for untracked changes ...');
-
-	await $seq(
-		[`git add .`, `git diff --quiet`, `git diff --cached --quiet`, `git checkout ${config.devBranch}`],
-		() => {
-			throw new UserError('there are still untracked changes');
-		},
-		() => {},
-		Verboseness.QUITET,
-	);
-
-	console.log('');
-
-	console.log('running preconditions ...');
-
-	console.log('');
-
+async function runPreconditions(): Promise<void> {
+	// run preconditions
 	await $seq(
 		[`bun run format`, `bun run lint:fix`, `bun run test`],
 		(cmd: string) => {
@@ -30,8 +14,9 @@ async function run() {
 		Verboseness.VERBOSE,
 	);
 
+	// add changed files
 	await $seq(
-		[`git add .`, `git commit -m"[auto] run release preconditions"`],
+		[`git add .`],
 		() => {
 			throw new UserError('failed to add preconditions changes to git');
 		},
@@ -39,11 +24,48 @@ async function run() {
 		Verboseness.NORMAL,
 	);
 
-	console.log('');
+	// check if there were any changes
+	let changesToCommit = true;
+	await $seq(
+		[`git diff --quiet`, `git diff --cached --quiet`],
+		() => {
+			changesToCommit = false;
+		},
+		() => {},
+		Verboseness.QUITET,
+	);
 
-	console.log('bumping versions ...');
+	// if there were any changes, commit them
+	if (changesToCommit) {
+		await $seq(
+			[`git commit -m"[auto] run release preconditions"`],
+			() => {
+				throw new UserError('failed to add preconditions changes to git');
+			},
+			() => {},
+			Verboseness.NORMAL,
+		);
+	}
+}
 
-	console.log('');
+async function run() {
+	console.log('looking for untracked changes ...');
+
+	// check for any uncommited files and exit if there are any
+	await $seq(
+		[`git add .`, `git diff --quiet`, `git diff --cached --quiet`, `git checkout ${config.devBranch}`],
+		() => {
+			throw new UserError('there are still untracked changes');
+		},
+		() => {},
+		Verboseness.QUITET,
+	);
+
+	console.log('\nrunning preconditions ...\n');
+
+	await runPreconditions();
+
+	console.log('\nbumping versions ...\n');
 
 	const manifestFile = Bun.file('./manifest.json');
 	const manifest = await manifestFile.json();
@@ -94,11 +116,7 @@ async function run() {
 		Verboseness.NORMAL,
 	);
 
-	console.log('');
-
-	console.log('creating release tag ...');
-
-	console.log('');
+	console.log('\ncreating release tag ...\n');
 
 	await $seq(
 		[
