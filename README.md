@@ -19,10 +19,15 @@ If and **only if** you completed these steps, you can run `bun install` and `bun
 
 -   `dev` - build into the example vault with hot reload
 -   `build` - build for release
+-   `tsc` - run type checker
 -   `test` - run your tests
+-   `test:log` - run your tests with console output enabled
 -   `format` - format your code
+-   `format:check` - check the formatting of your code
 -   `lint` - lint your code
 -   `lint:fix` - lint your code and fix auto fixable mistakes
+-   `check` - check for formatting, linting, type errors and run the tests
+-   `check:fix` - fix formatting and linting errors, check for type errors and run the tests
 -   `release` - run the script to release a new version
 
 ## References
