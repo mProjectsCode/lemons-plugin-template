@@ -98,7 +98,7 @@ export function stringifyVersion(version: Version): string {
 
 export function getIncrementOptions(version: Version): [Version, Version, Version, CanaryVersion] {
 	const moment = Moment();
-	const canary = moment.format('YYYYMMDDTHHmmss');
+	const canary = moment.utcOffset(0).format('YYYYMMDDTHHmmss');
 	return [
 		new Version(version.major + 1, 0, 0),
 		new Version(version.major, version.minor + 1, 0),
