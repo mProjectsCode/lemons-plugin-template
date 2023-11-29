@@ -1,6 +1,8 @@
 import esbuild from 'esbuild';
 import process from 'process';
 import builtins from 'builtin-modules';
+import esbuildSvelte from 'esbuild-svelte';
+import sveltePreprocess from 'svelte-preprocess';
 import manifest from './manifest.json' assert { type: 'json' };
 
 const banner = `/*
@@ -46,6 +48,15 @@ esbuild
 		treeShaking: true,
 		outfile: 'main.js',
 		minify: true,
-		plugins: [],
+		plugins: [
+			esbuildSvelte({
+				compilerOptions: { css: 'injected' },
+				preprocess: sveltePreprocess(),
+				filterWarnings: warning => {
+					// we don't want warnings from node modules that we can do nothing about
+					return !warning.filename.includes('node_modules');
+				},
+			}),
+		],
 	})
 	.catch(() => process.exit(1));

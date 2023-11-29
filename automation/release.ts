@@ -70,9 +70,6 @@ async function run() {
 	const manifestFile = Bun.file('./manifest.json');
 	const manifest = await manifestFile.json();
 
-	const betaManifestFile = Bun.file('./manifest-beta.json');
-	const betaManifest = await betaManifestFile.json();
-
 	const versionString: string = manifest.version;
 	const currentVersion: Version = parseVersion(versionString);
 	const currentVersionString = stringifyVersion(currentVersion);
@@ -96,9 +93,12 @@ async function run() {
 		manifest.version = newVersionString;
 	}
 
+	await Bun.write(manifestFile, JSON.stringify(manifest, null, '\t'));
+
+	const betaManifest = structuredClone(manifest);
 	betaManifest.version = newVersionString;
 
-	await Bun.write(manifestFile, JSON.stringify(manifest, null, '\t'));
+	const betaManifestFile = Bun.file('./manifest-beta.json');
 	await Bun.write(betaManifestFile, JSON.stringify(betaManifest, null, '\t'));
 
 	if (!(newVersion instanceof CanaryVersion)) {
