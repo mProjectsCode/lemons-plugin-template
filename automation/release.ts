@@ -1,6 +1,6 @@
-import { $seq, Verboseness, $input, $choise, $confirm, CMD_FMT } from './shellUtils';
+import { $seq, Verboseness, $input, $choise as $choice, $confirm, CMD_FMT } from './shellUtils';
 import config from './config.json';
-import { Version, getIncrementOptions, parseVersion, stringifyVersion } from 'versionUtils';
+import { CanaryVersion, Version, getIncrementOptions, parseVersion, stringifyVersion } from 'versionUtils';
 import { UserError } from 'utils';
 
 async function runPreconditions(): Promise<void> {
@@ -70,17 +70,20 @@ async function run() {
 	const manifestFile = Bun.file('./manifest.json');
 	const manifest = await manifestFile.json();
 
+	const betaManifestFile = Bun.file('./manifest-beta.json');
+	const betaManifest = await betaManifestFile.json();
+
 	const versionString: string = manifest.version;
 	const currentVersion: Version = parseVersion(versionString);
 	const currentVersionString = stringifyVersion(currentVersion);
 
 	const versionIncrementOptions = getIncrementOptions(currentVersion);
 
-	const selctedIndex = await $choise(
+	const selectedIndex = await $choice(
 		`Current version "${currentVersionString}". Select new version`,
 		versionIncrementOptions.map(x => stringifyVersion(x)),
 	);
-	const newVersion = versionIncrementOptions[selctedIndex];
+	const newVersion = versionIncrementOptions[selectedIndex];
 	const newVersionString = stringifyVersion(newVersion);
 
 	console.log('');
@@ -89,23 +92,30 @@ async function run() {
 		throw new UserError('user canceled script');
 	});
 
-	manifest.version = newVersionString;
+	if (!(newVersion instanceof CanaryVersion)) {
+		manifest.version = newVersionString;
+	}
+
+	betaManifest.version = newVersionString;
 
 	await Bun.write(manifestFile, JSON.stringify(manifest, null, '\t'));
+	await Bun.write(betaManifestFile, JSON.stringify(betaManifest, null, '\t'));
 
-	const versionsFile = Bun.file('./versions.json');
-	const versionsJson = await versionsFile.json();
+	if (!(newVersion instanceof CanaryVersion)) {
+		const versionsFile = Bun.file('./versions.json');
+		const versionsJson = await versionsFile.json();
 
-	versionsJson[newVersionString] = manifest.minAppVersion;
+		versionsJson[newVersionString] = manifest.minAppVersion;
 
-	await Bun.write(versionsFile, JSON.stringify(versionsJson, null, '\t'));
+		await Bun.write(versionsFile, JSON.stringify(versionsJson, null, '\t'));
 
-	const packageFile = Bun.file('./package.json');
-	const packageJson = await packageFile.json();
+		const packageFile = Bun.file('./package.json');
+		const packageJson = await packageFile.json();
 
-	packageJson.version = newVersionString;
+		packageJson.version = newVersionString;
 
-	await Bun.write(packageFile, JSON.stringify(packageJson, null, '\t'));
+		await Bun.write(packageFile, JSON.stringify(packageJson, null, '\t'));
+	}
 
 	await $seq(
 		[`bun run format`, `git add .`, `git commit -m "[auto] bump version to \`${newVersionString}\`"`],

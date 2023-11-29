@@ -44,7 +44,7 @@ export async function $(cmd: string, verboseness: Verboseness = Verboseness.NORM
 
 	if (verboseness === Verboseness.NORMAL || verboseness === Verboseness.VERBOSE) {
 		if (exit === 0) {
-			console.log(`${CMD_FMT.FgGreen}sucess${CMD_FMT.Reset} - ${cmd}\n`);
+			console.log(`${CMD_FMT.FgGreen}success${CMD_FMT.Reset} - ${cmd}\n`);
 		} else {
 			console.log(`${CMD_FMT.FgRed}fail${CMD_FMT.Reset} - ${cmd} - code ${exit}\n`);
 		}
@@ -107,7 +107,7 @@ export async function $choise(message: string, options: string[]): Promise<numbe
 		ret = optionNumbers.get(selectedStr);
 
 		if (ret === undefined) {
-			console.log(`${CMD_FMT.FgRed}invalid slection, please select a valid option${CMD_FMT.Reset}`);
+			console.log(`${CMD_FMT.FgRed}invalid selection, please select a valid option${CMD_FMT.Reset}`);
 		}
 	}
 
@@ -127,7 +127,7 @@ export async function $confirm(message: string, onReject: () => void): Promise<v
 			return;
 		}
 
-		console.log(`${CMD_FMT.FgRed}invalid slection, please select a valid option${CMD_FMT.Reset}`);
+		console.log(`${CMD_FMT.FgRed}invalid selection, please select a valid option${CMD_FMT.Reset}`);
 	}
 }
 
