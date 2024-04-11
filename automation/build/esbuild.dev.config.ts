@@ -34,7 +34,7 @@ const context = await esbuild.context({
 	sourcemap: 'inline',
 	treeShaking: true,
 	outdir: `exampleVault/.obsidian/plugins/${manifest.id}/`,
-	outbase: 'packages/obsidian/src',
+	outbase: 'src',
 	define: {
 		MB_GLOBAL_CONFIG_DEV_BUILD: 'true',
 	},
