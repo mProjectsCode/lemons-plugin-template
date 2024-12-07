@@ -1,7 +1,7 @@
 {
 	"id": "lemons-plugin-template",
 	"name": "Lemons Plugin Template",
-	"version": "0.0.4-canary.20241207T175030",
+	"version": "0.0.4-canary.20241207T175134",
 	"minAppVersion": "1.4.0",
 	"description": "This is a sample plugin for Obsidian. This plugin demonstrates some of the capabilities of the Obsidian API.",
 	"author": "Moritz Jung",
