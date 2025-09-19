@@ -1,5 +1,6 @@
-import { type App, PluginSettingTab, Setting } from 'obsidian';
-import type MyPlugin from '../main';
+import type { App } from 'obsidian';
+import { PluginSettingTab, Setting } from 'obsidian';
+import type MyPlugin from 'packages/obsidian/src/main';
 
 export class SampleSettingTab extends PluginSettingTab {
 	plugin: MyPlugin;

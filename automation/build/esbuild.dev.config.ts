@@ -1,9 +1,10 @@
 import esbuild from 'esbuild';
 import copy from 'esbuild-plugin-copy-watch';
-import esbuildSvelte from 'esbuild-svelte';
-import sveltePreprocess from 'svelte-preprocess';
 import manifest from '../../manifest.json' assert { type: 'json' };
+import esbuildSvelte from 'esbuild-svelte';
+import { sveltePreprocess } from 'svelte-preprocess';
 import { getBuildBanner } from 'build/buildBanner';
+import { wasmPlugin } from './wasmPlugin';
 
 const banner = getBuildBanner('Dev Build', _ => 'Dev Build');
 
@@ -11,7 +12,7 @@ const context = await esbuild.context({
 	banner: {
 		js: banner,
 	},
-	entryPoints: ['src/main.ts'],
+	entryPoints: ['packages/obsidian/src/main.ts'],
 	bundle: true,
 	external: [
 		'obsidian',
@@ -34,10 +35,8 @@ const context = await esbuild.context({
 	sourcemap: 'inline',
 	treeShaking: true,
 	outdir: `exampleVault/.obsidian/plugins/${manifest.id}/`,
-	outbase: 'src',
-	define: {
-		MB_GLOBAL_CONFIG_DEV_BUILD: 'true',
-	},
+	outbase: 'packages/obsidian/src',
+	conditions: ['browser', 'development'],
 	plugins: [
 		copy({
 			paths: [
@@ -51,8 +50,9 @@ const context = await esbuild.context({
 				},
 			],
 		}),
+		wasmPlugin,
 		esbuildSvelte({
-			compilerOptions: { css: 'injected', dev: true, sveltePath: 'svelte' },
+			compilerOptions: { css: 'injected', dev: false },
 			preprocess: sveltePreprocess(),
 			filterWarnings: warning => {
 				// we don't want warnings from node modules that we can do nothing about
