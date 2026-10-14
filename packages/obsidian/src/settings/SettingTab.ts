@@ -1,5 +1,5 @@
-import type { App } from 'obsidian';
-import { PluginSettingTab, Setting } from 'obsidian';
+import type { App, SettingDefinitionItem } from 'obsidian';
+import { PluginSettingTab } from 'obsidian';
 import type MyPlugin from 'packages/obsidian/src/main';
 
 export class SampleSettingTab extends PluginSettingTab {
@@ -11,20 +11,13 @@ export class SampleSettingTab extends PluginSettingTab {
 		this.plugin = plugin;
 	}
 
-	display(): void {
-		this.containerEl.empty();
-
-		new Setting(this.containerEl)
-			.setName('Setting #1')
-			.setDesc("It's a secret")
-			.addText(text =>
-				text
-					.setPlaceholder('Enter your secret')
-					.setValue(this.plugin.settings.mySetting)
-					.onChange(async value => {
-						this.plugin.settings.mySetting = value;
-						await this.plugin.saveSettings();
-					}),
-			);
+	getSettingDefinitions(): SettingDefinitionItem[] {
+		return [
+			{
+				name: 'Setting #1',
+				desc: "It's a secret",
+				control: { type: 'text', key: 'mySetting', placeholder: 'Enter your secret' },
+			},
+		];
 	}
 }

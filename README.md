@@ -1,5 +1,7 @@
 # Lemons Plugin Template
 
+A minimal TypeScript plugin requiring Obsidian 1.13.0 or newer.
+
 ## Setup
 
 This uses [bun](https://bun.sh/), not node. So you need that installed. If you are on windows use WSL, if that does not work... good luck.

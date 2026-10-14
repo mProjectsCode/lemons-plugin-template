@@ -1,0 +1,6 @@
+{
+	"devBranch": "master",
+	"releaseBranch": "release",
+	"github": "https://github.com/mProjectsCode/lemons-plugin-template",
+	"preconditions": ["bun run verify"]
+}

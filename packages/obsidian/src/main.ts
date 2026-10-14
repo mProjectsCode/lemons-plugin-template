@@ -1,12 +1,12 @@
+import 'packages/obsidian/src/styles.css';
 import { Plugin } from 'obsidian';
 import type { MyPluginSettings } from 'packages/obsidian/src/settings/Settings';
 import { DEFAULT_SETTINGS } from 'packages/obsidian/src/settings/Settings';
 import { SampleSettingTab } from 'packages/obsidian/src/settings/SettingTab';
 
 export default class MyPlugin extends Plugin {
-	settings!: MyPluginSettings;
+	declare settings: MyPluginSettings;
 
-	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	async onload(): Promise<void> {
 		await this.loadSettings();
 
